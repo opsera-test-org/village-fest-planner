@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: village-dev
+  namespace: argocd
+  labels:
+    tenant: opsera
+    app: village
+    environment: dev
+    managed-by: opsera-c2c
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/opsera-test-org/village-fest-planner.git
+    targetRevision: main
+    path: .opsera-village/k8s/overlays/dev
+  destination:
+    name: opsera-usw2-np
+    namespace: opsera-village-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
