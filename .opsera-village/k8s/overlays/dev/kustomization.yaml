@@ -12,7 +12,7 @@ resources:
 images:
   - name: PLACEHOLDER_ECR_URI
     newName: 792373136340.dkr.ecr.us-west-2.amazonaws.com/opsera/village
-    newTag: 2ee0b77-20260215044606 
+    newTag: 
 
 labels:
   - includeSelectors: false
