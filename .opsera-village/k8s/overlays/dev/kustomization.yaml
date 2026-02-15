@@ -10,9 +10,9 @@ resources:
   - ingress.yaml
 
 images:
-  - name: 792373136340.dkr.ecr.us-west-2.amazonaws.com/opsera/village
+  - name: PLACEHOLDER_ECR_URI
     newName: 792373136340.dkr.ecr.us-west-2.amazonaws.com/opsera/village
-    newTag: 
+    newTag: 2ee0b77-20260215044606 
 
 labels:
   - includeSelectors: false

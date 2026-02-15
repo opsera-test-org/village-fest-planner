@@ -239,17 +239,19 @@ jobs:
           AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
           ECR_REPO="${ECR_REGISTRY}/${ECR_REPO_NAME}"
+          IMAGE_TAG="${{ needs.build-image.outputs.image_tag }}"
 
           cd .opsera-${APP_NAME}/k8s/overlays/${ENVIRONMENT}
 
-          # Replace PLACEHOLDER_ECR_URI with actual ECR URI
-          sed -i "s|PLACEHOLDER_ECR_URI|${ECR_REPO}|g" kustomization.yaml deployment.yaml
-
-          # Update image tag in kustomization.yaml
-          IMAGE_TAG="${{ needs.build-image.outputs.image_tag }}"
+          # Update kustomization.yaml - keep name: PLACEHOLDER_ECR_URI, only update newName and newTag
+          sed -i "s|newName: PLACEHOLDER_ECR_URI|newName: ${ECR_REPO}|g" kustomization.yaml
           sed -i "s|newTag:.*|newTag: ${IMAGE_TAG}|g" kustomization.yaml
 
-          echo "✓ Manifests updated with image: ${ECR_IMAGE}"
+          # Keep deployment.yaml unchanged - kustomize will replace PLACEHOLDER_ECR_URI at build time
+          # DO NOT modify deployment.yaml image field
+
+          echo "✓ Manifests updated with image: ${ECR_REPO}:${IMAGE_TAG}"
+          cat kustomization.yaml
 
       - name: Commit and Push Changes (Idempotent)
         run: |
