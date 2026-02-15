@@ -31,7 +31,7 @@ spec:
         fsGroup: 101
       containers:
         - name: village
-          image: PLACEHOLDER_ECR_URI
+          image: 792373136340.dkr.ecr.us-west-2.amazonaws.com/opsera/village
           imagePullPolicy: Always
           ports:
             - name: http
